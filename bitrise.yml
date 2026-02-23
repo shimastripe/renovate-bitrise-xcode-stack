@@ -1,0 +1,4 @@
+meta:
+  bitrise.io:
+    machine_type_id: g2.mac.large
+    stack: osx-xcode-26.0.x

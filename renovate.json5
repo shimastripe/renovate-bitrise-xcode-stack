@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  "extends": [
+    "config:recommended"
+  ],
+
+  "customDatasources": {
+    "bitriseStacks": {
+      "defaultRegistryUrlTemplate": "https://stacks.bitrise.io/index.json",
+      "format": "json",
+      "transformTemplates": [
+        "($sr := $.sections[stack_reports][0].stack_reports; $ids := $distinct($sr[stack_meta.platform='macOS' and $substring(stack_meta.stack_id,0,10)='osx-xcode-'].stack_meta.stack_id); {\"releases\": $ids.{\"version\": $, \"changelogUrl\": $join(['https://bitrise.io/stacks/changelogs/', $]), \"homepage\": 'https://bitrise.io/stacks', \"sourceUrl\": 'https://github.com/bitrise-io/stacks' }, \"homepage\": 'https://bitrise.io/stacks', \"sourceUrl\": 'https://github.com/bitrise-io/stacks'})"
+      ]
+    }
+  },
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["(^|/)bitrise\\.yml$"],
+      "matchStrings": [
+        "(?:^|\\r\\n|\\r|\\n)\\s*stack:\\s*\"?(?<currentValue>osx-xcode-[^\"\\s#]+)\"?"
+      ],
+      "depNameTemplate": "bitrise-macos-stack",
+      "datasourceTemplate": "custom.bitriseStacks"
+    }
+  ],
+
+  "packageRules": [
+    {
+      "matchDepNames": ["bitrise-macos-stack"],
+      "changelogUrl": "https://bitrise.io/stacks/stack_reports/{{{newVersion}}}",
+      "versioning": "regex:^osx-xcode-(?<major>\\d+)\\.(?<minor>\\d+)\\.x(?:-(?<compatibility>edge))?$",
+      "allowedVersions": "/^osx-xcode-\\d+\\.\\d+\\.x(-edge)?$/"
+    }
+  ]
+}
