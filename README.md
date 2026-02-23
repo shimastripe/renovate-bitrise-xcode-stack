@@ -1,0 +1,1 @@
+# renovate-bitrise-xcode-stack
