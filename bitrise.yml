@@ -3,7 +3,7 @@ format_version: '15'
 workflows:
   _prepare:
     steps:
-    - activate-ssh-key@3: {}
+    - activate-ssh-key@4.1.1: {}
 meta:
   bitrise.io:
     machine_type_id: g2.mac.large
